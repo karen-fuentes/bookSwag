@@ -13,6 +13,7 @@
 		9CF157591ED10A670092BAD3 /* APIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF157581ED10A670092BAD3 /* APIRequestManager.swift */; };
 		9CF1575B1ED10D550092BAD3 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF1575A1ED10D550092BAD3 /* Book.swift */; };
 		9CF1575D1ED1144F0092BAD3 /* BookTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF1575C1ED1144F0092BAD3 /* BookTableViewController.swift */; };
+		9CF1575F1ED126360092BAD3 /* AddBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF1575E1ED126360092BAD3 /* AddBookViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		9CF157581ED10A670092BAD3 /* APIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequestManager.swift; sourceTree = "<group>"; };
 		9CF1575A1ED10D550092BAD3 /* Book.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		9CF1575C1ED1144F0092BAD3 /* BookTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookTableViewController.swift; sourceTree = "<group>"; };
+		9CF1575E1ED126360092BAD3 /* AddBookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddBookViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				9CF157461ED109810092BAD3 /* AppDelegate.swift */,
 				9CF1575C1ED1144F0092BAD3 /* BookTableViewController.swift */,
+				9CF1575E1ED126360092BAD3 /* AddBookViewController.swift */,
 				9CF157581ED10A670092BAD3 /* APIRequestManager.swift */,
 				9CF1575A1ED10D550092BAD3 /* Book.swift */,
 				9CF1574D1ED109810092BAD3 /* Assets.xcassets */,
@@ -139,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CF1575B1ED10D550092BAD3 /* Book.swift in Sources */,
+				9CF1575F1ED126360092BAD3 /* AddBookViewController.swift in Sources */,
 				9CF157591ED10A670092BAD3 /* APIRequestManager.swift in Sources */,
 				9CF1575D1ED1144F0092BAD3 /* BookTableViewController.swift in Sources */,
 				9CF157471ED109810092BAD3 /* AppDelegate.swift in Sources */,

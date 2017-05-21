@@ -15,6 +15,11 @@ class BookTableViewController: UITableViewController {
         super.viewDidLoad()
         getData()
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        self.title = "Book"
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add
+            , target: self, action: #selector(addBookButtonWasPressed))
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 200
     }
     
     func getData() {
@@ -30,7 +35,10 @@ class BookTableViewController: UITableViewController {
             }
         }
     }
-
+    func addBookButtonWasPressed() {
+      print("button was pressed")
+        self.navigationController?.pushViewController(AddBookViewController(), animated: true)
+    }
 
     // MARK: - Table view data source
 
@@ -46,10 +54,10 @@ class BookTableViewController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-
+        var cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
         cell.textLabel?.text = arrOfBooks[indexPath.row].title
-
+        cell.detailTextLabel?.text = arrOfBooks[indexPath.row].author
         return cell
     }
  
