@@ -7,6 +7,9 @@
 //
 
 import Foundation
+enum HttpMethods: String {
+    case post, put, delete
+}
 
 class APIRequestManager {
     
@@ -23,6 +26,45 @@ class APIRequestManager {
             guard let validData = data else { return }
             callback(validData)
             }.resume()
+    }
+    func postData(data: [String:Any],endPoint: String, method: HttpMethods , id: Int?) {
+        var endpointWithID = endPoint
+        if let bookId = id {
+            endpointWithID += "/\(bookId)"
+        }
+        guard let url = URL(string: endpointWithID) else {return}
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        do {
+            let body = try JSONSerialization.data(withJSONObject: data, options: [])
+            request.httpBody = body
+            
+        }
+        catch {
+            print("error in creating body data: \(error)")
+        }
+        let session = URLSession(configuration: .default)
+        session.dataTask(with: request) { (data , response, error) in
+            if error != nil {
+                print("error during post request: \(error)")
+            }
+            if response != nil {
+                let httpResponse = (response! as! HTTPURLResponse)
+                print("Response status code: \(httpResponse.statusCode)")
+            }
+            guard let validData = data else {return}
+            do {
+                let json = try JSONSerialization.jsonObject(with: validData, options: .mutableLeaves) as? [String:Any]
+                if let validJson = json {
+                    dump(validJson)
+                }
+            }
+            catch {
+                print ("error in converting json \(error)")
+            }
+        }.resume()
     }
     
 }

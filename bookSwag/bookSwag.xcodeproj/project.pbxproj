@@ -14,6 +14,7 @@
 		9CF1575B1ED10D550092BAD3 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF1575A1ED10D550092BAD3 /* Book.swift */; };
 		9CF1575D1ED1144F0092BAD3 /* BookTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF1575C1ED1144F0092BAD3 /* BookTableViewController.swift */; };
 		9CF1575F1ED126360092BAD3 /* AddBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF1575E1ED126360092BAD3 /* AddBookViewController.swift */; };
+		9CF157611ED20A850092BAD3 /* BookDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF157601ED20A850092BAD3 /* BookDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		9CF1575A1ED10D550092BAD3 /* Book.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		9CF1575C1ED1144F0092BAD3 /* BookTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookTableViewController.swift; sourceTree = "<group>"; };
 		9CF1575E1ED126360092BAD3 /* AddBookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddBookViewController.swift; sourceTree = "<group>"; };
+		9CF157601ED20A850092BAD3 /* BookDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,16 +60,49 @@
 		9CF157451ED109810092BAD3 /* bookSwag */ = {
 			isa = PBXGroup;
 			children = (
-				9CF157461ED109810092BAD3 /* AppDelegate.swift */,
+				9CF157651ED20B0F0092BAD3 /* Supporting Files */,
+				9CF157641ED20AFA0092BAD3 /* Networking */,
+				9CF157631ED20ADA0092BAD3 /* ViewControllers */,
+				9CF157621ED20AC50092BAD3 /* Models */,
+			);
+			path = bookSwag;
+			sourceTree = "<group>";
+		};
+		9CF157621ED20AC50092BAD3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9CF1575A1ED10D550092BAD3 /* Book.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		9CF157631ED20ADA0092BAD3 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
 				9CF1575C1ED1144F0092BAD3 /* BookTableViewController.swift */,
 				9CF1575E1ED126360092BAD3 /* AddBookViewController.swift */,
+				9CF157601ED20A850092BAD3 /* BookDetailViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		9CF157641ED20AFA0092BAD3 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
 				9CF157581ED10A670092BAD3 /* APIRequestManager.swift */,
-				9CF1575A1ED10D550092BAD3 /* Book.swift */,
+			);
+			name = Networking;
+			sourceTree = "<group>";
+		};
+		9CF157651ED20B0F0092BAD3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9CF157461ED109810092BAD3 /* AppDelegate.swift */,
 				9CF1574D1ED109810092BAD3 /* Assets.xcassets */,
 				9CF1574F1ED109810092BAD3 /* LaunchScreen.storyboard */,
 				9CF157521ED109810092BAD3 /* Info.plist */,
 			);
-			path = bookSwag;
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -143,6 +178,7 @@
 			files = (
 				9CF1575B1ED10D550092BAD3 /* Book.swift in Sources */,
 				9CF1575F1ED126360092BAD3 /* AddBookViewController.swift in Sources */,
+				9CF157611ED20A850092BAD3 /* BookDetailViewController.swift in Sources */,
 				9CF157591ED10A670092BAD3 /* APIRequestManager.swift in Sources */,
 				9CF1575D1ED1144F0092BAD3 /* BookTableViewController.swift in Sources */,
 				9CF157471ED109810092BAD3 /* AppDelegate.swift in Sources */,

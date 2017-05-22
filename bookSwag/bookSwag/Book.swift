@@ -19,7 +19,7 @@ struct Book {
     let lastCheckedOut: String?
     let lastCheckedOutBy: String?
     let publisher: String?
-    let title: String?
+    var title: String?
     let url: String
     
    static func createBookObjects(data: Data) -> [Book]? {

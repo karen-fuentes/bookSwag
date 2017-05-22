@@ -30,8 +30,6 @@ class BookTableViewController: UITableViewController {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
-                
-                
             }
         }
     }
@@ -60,7 +58,11 @@ class BookTableViewController: UITableViewController {
         cell.detailTextLabel?.text = arrOfBooks[indexPath.row].author
         return cell
     }
- 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let detailVC = BookDetailViewController()
+        detailVC.selectedBook = arrOfBooks[indexPath.row]
+        self.navigationController?.pushViewController(detailVC, animated: true)
+    }
 
     /*
     // Override to support conditional editing of the table view.
