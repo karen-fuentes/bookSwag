@@ -31,6 +31,7 @@ class BookDetailViewController: UIViewController {
         self.lastCheckedOutLabel.text = selectedBook.lastCheckedOut!
         checkoutButton.addTarget(self, action: #selector(checkoutButtonWasPressed), for: .touchUpInside)
     }
+    
     func shareButtonWasPressed() {
         if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeFacebook) {
             let socialController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
@@ -61,17 +62,17 @@ class BookDetailViewController: UIViewController {
     func configureConstraints() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        stackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -30).isActive = true
-        
-        checkoutButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20).isActive = true
-        checkoutButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15).isActive = true
-        checkoutButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15).isActive = true
+        let _ = [
+            stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -30),
+            
+            checkoutButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
+            checkoutButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            checkoutButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
+            ].map({$0.isActive = true })
     }
     
     func setUpViews() {
-        //self.view.addSubview(titleLabel)
         stackView.axis  = UILayoutConstraintAxis.vertical
         stackView.distribution  = UIStackViewDistribution.equalSpacing
         stackView.alignment = UIStackViewAlignment.center
@@ -88,6 +89,8 @@ class BookDetailViewController: UIViewController {
         self.view.addSubview(checkoutButton)
 
     }
+    
+    //MARK: - UI Objects
     
     lazy var titleLabel: UILabel = {
        let lbl = UILabel()

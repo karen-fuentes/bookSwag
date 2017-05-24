@@ -37,7 +37,7 @@ class AddBookViewController: UIViewController {
                 "publisher": "\(publisher)",
                 "categories": "\(categories)"
             ]
-            APIRequestManager.manager.postData(data: postData, endPoint: "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177/books", method: .post, id: nil)
+            APIRequestManager.manager.updateData(data: postData, method: .post, id: nil)
         }
        
     }

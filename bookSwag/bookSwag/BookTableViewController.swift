@@ -14,12 +14,16 @@ class BookTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         getData()
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "bookCell")
+        self.tableView.register(BookTableViewCell.self, forCellReuseIdentifier: "bookCell")
         self.title = "Book"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add
             , target: self, action: #selector(addBookButtonWasPressed))
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 200
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        getData()
     }
     
     //MARK: - Networking
@@ -35,9 +39,7 @@ class BookTableViewController: UITableViewController {
             }
         }
     }
-    override func viewDidAppear(_ animated: Bool) {
-        self.tableView.reloadData()
-    }
+   
     
     // MARK: - addBook Functionality
     
@@ -57,10 +59,10 @@ class BookTableViewController: UITableViewController {
         return arrOfBooks.count
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "bookCell", for: indexPath)
-        cell = UITableViewCell(style: .subtitle, reuseIdentifier: "bookCell")
-        cell.textLabel?.text = arrOfBooks[indexPath.row].title
-        cell.detailTextLabel?.text = arrOfBooks[indexPath.row].author
+        let cell = tableView.dequeueReusableCell(withIdentifier: "bookCell", for: indexPath) as! BookTableViewCell
+        //cell = UITableViewCell(style: .subtitle, reuseIdentifier: "bookCell")
+        cell.bookTitleLabel.text = arrOfBooks[indexPath.row].title
+        cell.bookAuthorLabel.text = arrOfBooks[indexPath.row].author
         return cell
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
