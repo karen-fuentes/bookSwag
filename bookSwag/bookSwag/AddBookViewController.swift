@@ -10,55 +10,75 @@ import UIKit
 
 class AddBookViewController: UIViewController {
     let stackView = UIStackView()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         self.title = "Add Book"
         self.navigationItem.setHidesBackButton(true , animated: true)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonWasPressed))
+        submitButton.addTarget(self, action: #selector(submitButtonWasPressed), for: .touchUpInside)
         viewHiearchy()
         configureConstraint()
-      
-    }
-
-    func doneButtonWasPressed() {
         
     }
+    
+    func doneButtonWasPressed() {
+        self.dismiss(animated: true , completion: nil)
+    }
+    func submitButtonWasPressed(){
+        if let title = titleTextField.text,
+            let publisher = publisherTextField.text,
+            let author = authorTextField.text,
+            let categories = categoriesTextField.text {
+            let postData = [
+                "title": "\(title)",
+                "author": "\(author)",
+                "publisher": "\(publisher)",
+                "categories": "\(categories)"
+            ]
+            APIRequestManager.manager.postData(data: postData, endPoint: "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177/books", method: .post, id: nil)
+        }
+       
+    }
+    
+    //MARK: - Constraint Config.
+    
     func configureConstraint() {
+        self.edgesForExtendedLayout = []
         stackView.translatesAutoresizingMaskIntoConstraints = false
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
         authorTextField.translatesAutoresizingMaskIntoConstraints = false
         publisherTextField.translatesAutoresizingMaskIntoConstraints = false
         categoriesTextField.translatesAutoresizingMaskIntoConstraints = false
         submitButton.translatesAutoresizingMaskIntoConstraints = false
-        self.edgesForExtendedLayout = []
-        stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 40.0).isActive = true
         
-        titleTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 8).isActive = true
-        titleTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8).isActive = true
-        titleTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        authorTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 8).isActive = true
-        authorTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8).isActive = true
-        authorTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        
-        publisherTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 8).isActive = true
-        publisherTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8).isActive = true
-       publisherTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        
-        categoriesTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 8).isActive = true
-        categoriesTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8).isActive = true
-        categoriesTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        
-        submitButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 16).isActive = true
-        submitButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        submitButton.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.25).isActive = true
+        let _ = [
+            stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 40.0),
+            
+            titleTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 8),
+            titleTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8),
+            titleTextField.heightAnchor.constraint(equalToConstant: 40),
+            
+            authorTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 8),
+            authorTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8),
+            authorTextField.heightAnchor.constraint(equalToConstant: 40),
+            
+            publisherTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 8),
+            publisherTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8),
+            publisherTextField.heightAnchor.constraint(equalToConstant: 40),
+            
+            categoriesTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 8),
+            categoriesTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8),
+            categoriesTextField.heightAnchor.constraint(equalToConstant: 40),
+            
+            submitButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 16),
+            submitButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            submitButton.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.25),
+            ].map({$0.isActive = true})
     }
+    
     func viewHiearchy() {
         stackView.axis  = UILayoutConstraintAxis.vertical
         stackView.distribution  = UIStackViewDistribution.equalSpacing
@@ -69,15 +89,12 @@ class AddBookViewController: UIViewController {
         stackView.addArrangedSubview(authorTextField)
         stackView.addArrangedSubview(publisherTextField)
         stackView.addArrangedSubview(categoriesTextField)
-      
         
         self.view.addSubview(stackView)
         self.view.addSubview(submitButton)
-        
     }
     
-    //UI Objects
-
+    //MARK: - UI Objects
     
     lazy var titleTextField: UITextField = {
         let txtField = UITextField()
@@ -116,8 +133,6 @@ class AddBookViewController: UIViewController {
         button.setTitleColor(.blue, for: .normal)
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.lightGray.cgColor
-
         return button
     }()
-
 }

@@ -64,8 +64,6 @@ struct Book {
         catch {
             
         }
-
-        
         return bookArr
     }
 }

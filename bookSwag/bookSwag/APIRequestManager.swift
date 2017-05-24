@@ -67,4 +67,47 @@ class APIRequestManager {
         }.resume()
     }
     
+    func putRequest(endPoint: String, id: Int, dataBody: [String : Any], callback: @escaping (HTTPURLResponse?) -> Void) {
+        let combinedEndpoint: String = "\(endPoint)\(id)"
+        var request = URLRequest(url: URL(string: combinedEndpoint)!)
+        request.httpMethod = "PUT"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        do {
+            let body = try JSONSerialization.data(withJSONObject: dataBody, options: [])
+            request.httpBody = body
+        }
+            
+        catch {
+            print("Error posting body: \(error)")
+        }
+        
+        let session = URLSession.shared
+        
+        session.dataTask(with: request) { (data, response, error) in
+            if error != nil {
+                print("Error encountered during post request: \(error)")
+            }
+            
+            if response != nil {
+                let httpResponse = (response! as! HTTPURLResponse)
+                callback(httpResponse)
+                print("Response status code: \(httpResponse.statusCode)")
+            }
+            
+            guard let validData = data else { return }
+            do {
+                let json = try JSONSerialization.jsonObject(with: validData, options: []) as? [String:Any]
+                if let validJson = json {
+                    print(validJson)
+                }
+            }
+                
+            catch {
+                print("Error converting json: \(error)")
+            }
+            }.resume()
+    }
+    
 }

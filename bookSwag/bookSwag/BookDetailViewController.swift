@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Social
 
 class BookDetailViewController: UIViewController {
     var selectedBook: Book!
@@ -25,13 +26,53 @@ class BookDetailViewController: UIViewController {
         self.categoriesLabel.text = selectedBook.catrgoires
         self.lastCheckedOutByLabel.text = selectedBook.lastCheckedOutBy
         self.lastCheckedOutLabel.text = selectedBook.lastCheckedOut!
-        
-      
-    
-    
+        checkoutButton.addTarget(self, action: #selector(checkoutButtonWasPressed), for: .touchUpInside)
     }
     func shareButtonWasPressed() {
+        if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeFacebook) {
+            let socialController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+            socialController?.setInitialText("Check out this book: \(selectedBook.title)")
+            socialController?.add(URL(string: "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177" + selectedBook.url))
+            
+            self.present(socialController!, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Accounts", message: "Please login to a Facebook account to share.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
         
+    }
+   func checkoutButtonWasPressed () {
+//        //let today = Book.todaysDate()
+//        let borrower = "Vic"
+//        
+//        let requestBody: [ String : Any ] = [
+//            "author" : selectedBook.author,
+//            "categories": selectedBook.categories,
+//            "id": selectedBook.id,
+//            "lastCheckedOut": today,
+//            "lastCheckedOutBy": borrower,
+//            "publisher": selectedBook.publisher as Any,
+//            "title": selectedBook.title,
+//            "url": selectedBook.url
+//        ]
+//        
+//        APIRequestManager.manager.putRequest(endPoint: baseEndpoint + bookEndpoint, id: selectedBook.id, dataBody: requestBody) { (response: HTTPURLResponse?) in
+//            DispatchQueue.main.async {
+//                if response != nil {
+//                    APIRequestManager.manager.getData(endPoint: self.baseEndpoint + self.selectedBook.url) { (data: Data?) in
+//                        if let validData = data, let validBook = Book.getSingleBook(from: validData) {
+//                            self.selectedBook = validBook
+//                            if let lastCheckedOutBy = self.selectedBook.lastCheckedOutBy, let lastCheckedOut = self.selectedBook.lastCheckedOut {
+//                                DispatchQueue.main.async {
+//                                    self.checkedOutLabel.text = "Last Checked Out By: \(lastCheckedOutBy) @ \(Book.dateStringToReadableString(lastCheckedOut))"
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
     
     func configureConstraints() {
@@ -44,9 +85,8 @@ class BookDetailViewController: UIViewController {
         checkoutButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20).isActive = true
         checkoutButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15).isActive = true
         checkoutButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15).isActive = true
-        
-        
     }
+    
     func setUpViews() {
         //self.view.addSubview(titleLabel)
         stackView.axis  = UILayoutConstraintAxis.vertical
@@ -105,5 +145,4 @@ class BookDetailViewController: UIViewController {
         button.clipsToBounds = true
         return button
     }()
-
 }
