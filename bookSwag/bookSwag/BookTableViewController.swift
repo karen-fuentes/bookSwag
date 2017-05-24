@@ -60,7 +60,6 @@ class BookTableViewController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookCell", for: indexPath) as! BookTableViewCell
-        //cell = UITableViewCell(style: .subtitle, reuseIdentifier: "bookCell")
         cell.bookTitleLabel.text = arrOfBooks[indexPath.row].title
         cell.bookAuthorLabel.text = arrOfBooks[indexPath.row].author
         return cell

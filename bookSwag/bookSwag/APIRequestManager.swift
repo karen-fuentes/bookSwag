@@ -9,7 +9,7 @@
 import Foundation
 
 enum HttpMethods: String {
-    case post, put, delete
+    case post, put
 }
 
 class APIRequestManager {
@@ -68,6 +68,26 @@ class APIRequestManager {
             } catch {
                 print("Error converting json: \(error)")
             }
+            }.resume()
+    }
+    func deleteRequest(endPoint: String, id: Int, callback: @escaping (URLResponse?) -> Void) {
+        let combinedEndpoint: String = "\(endPoint)\(id)"
+        var request = URLRequest(url: URL(string: combinedEndpoint)!)
+        request.httpMethod = "DELETE"
+        
+        let session = URLSession.shared
+        
+        session.dataTask(with: request) { (data, response, error) in
+            guard let _ = data else {
+                print("error calling DELETE on \(combinedEndpoint)")
+                return
+            }
+            
+            if response != nil {
+                callback(response)
+            }
+            
+            print("DELETE ok")
             }.resume()
     }
     

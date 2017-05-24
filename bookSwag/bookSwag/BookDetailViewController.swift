@@ -30,6 +30,7 @@ class BookDetailViewController: UIViewController {
         self.lastCheckedOutByLabel.text = selectedBook.lastCheckedOutBy!
         self.lastCheckedOutLabel.text = selectedBook.lastCheckedOut!
         checkoutButton.addTarget(self, action: #selector(checkoutButtonWasPressed), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(deleteButtonWasPressed), for: .touchUpInside)
     }
     
     func shareButtonWasPressed() {
@@ -42,6 +43,19 @@ class BookDetailViewController: UIViewController {
         } else {
             let alert = UIAlertController(title: "Accounts", message: "Please login to a Facebook account to share.", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+    }
+    
+    func deleteButtonWasPressed(){
+        print("delete button was pressed")
+      APIRequestManager.manager.deleteRequest(endPoint: basePoint + bookEndpoint, id: selectedBook.id) { (response) in
+        let alert = UIAlertController(title: "Delete", message: "Are you sure you want to delete this book?", preferredStyle: UIAlertControllerStyle.alert)
+               alert.addAction(UIAlertAction(title: "Delete", style: UIAlertActionStyle.destructive, handler: { (alert) in
+            let nav = UINavigationController(rootViewController: BookTableViewController())
+            self.present(nav, animated: true, completion: nil)
+        }))
             self.present(alert, animated: true, completion: nil)
         }
         
@@ -62,6 +76,7 @@ class BookDetailViewController: UIViewController {
     func configureConstraints() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
+        deleteButton.translatesAutoresizingMaskIntoConstraints = false
         let _ = [
             stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -30),
@@ -69,6 +84,10 @@ class BookDetailViewController: UIViewController {
             checkoutButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 20),
             checkoutButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
             checkoutButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
+            
+            deleteButton.topAnchor.constraint(equalTo: checkoutButton.bottomAnchor, constant: 20),
+            deleteButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            deleteButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15)
             ].map({$0.isActive = true })
     }
     
@@ -87,6 +106,7 @@ class BookDetailViewController: UIViewController {
         
         self.view.addSubview(stackView)
         self.view.addSubview(checkoutButton)
+        self.view.addSubview(deleteButton)
 
     }
     
@@ -131,4 +151,14 @@ class BookDetailViewController: UIViewController {
         button.clipsToBounds = true
         return button
     }()
+    lazy var deleteButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Delete Book", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .red
+        button.layer.borderWidth = 1
+        button.layer.cornerRadius = 5
+        button.clipsToBounds = true
+        return button
+        }()
 }
