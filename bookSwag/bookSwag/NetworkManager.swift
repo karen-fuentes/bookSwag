@@ -11,9 +11,7 @@ import Foundation
 enum RequestMethod: String {
     case post, put, get,delete
 }
-enum ErrorCases: Error {
-    case jsonSerializationError, postRequestError
-}
+
 class NetworkRequestManager{
     static let manager = NetworkRequestManager()
     private init() {}
@@ -34,13 +32,13 @@ class NetworkRequestManager{
                     let body = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
                     request.httpBody = body
                 } catch {
-                    print("Error serializing body: \(ErrorCases.jsonSerializationError)")
+                    print("Error serializing body: \(error)")
                 }
             }
         let session = URLSession.shared
         session.dataTask(with: request) { (data: Data?, response:URLResponse?, error:Error?) in
             if error != nil {
-                print("Error encountered during post request: \(ErrorCases.postRequestError)")
+                print("Error encountered during post request: \(error)")
             }
             if response != nil {
                 let httpResponse = (response! as! HTTPURLResponse)
