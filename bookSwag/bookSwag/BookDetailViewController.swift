@@ -11,7 +11,10 @@ import Social
 
 class BookDetailViewController: UIViewController {
     var selectedBook: Book!
-     let stackView = UIStackView()
+    let stackView = UIStackView()
+    let basePoint = "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177"
+    let bookEndpoint = "/books/"
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +27,7 @@ class BookDetailViewController: UIViewController {
         self.authorLabel.text = selectedBook.author
         self.publisherLabel.text = selectedBook.publisher
         self.categoriesLabel.text = selectedBook.catrgoires
-        self.lastCheckedOutByLabel.text = selectedBook.lastCheckedOutBy
+        self.lastCheckedOutByLabel.text = selectedBook.lastCheckedOutBy!
         self.lastCheckedOutLabel.text = selectedBook.lastCheckedOut!
         checkoutButton.addTarget(self, action: #selector(checkoutButtonWasPressed), for: .touchUpInside)
     }
@@ -43,36 +46,16 @@ class BookDetailViewController: UIViewController {
         
     }
    func checkoutButtonWasPressed () {
-//        //let today = Book.todaysDate()
-//        let borrower = "Vic"
-//        
-//        let requestBody: [ String : Any ] = [
-//            "author" : selectedBook.author,
-//            "categories": selectedBook.categories,
-//            "id": selectedBook.id,
-//            "lastCheckedOut": today,
-//            "lastCheckedOutBy": borrower,
-//            "publisher": selectedBook.publisher as Any,
-//            "title": selectedBook.title,
-//            "url": selectedBook.url
-//        ]
-//        
-//        APIRequestManager.manager.putRequest(endPoint: baseEndpoint + bookEndpoint, id: selectedBook.id, dataBody: requestBody) { (response: HTTPURLResponse?) in
-//            DispatchQueue.main.async {
-//                if response != nil {
-//                    APIRequestManager.manager.getData(endPoint: self.baseEndpoint + self.selectedBook.url) { (data: Data?) in
-//                        if let validData = data, let validBook = Book.getSingleBook(from: validData) {
-//                            self.selectedBook = validBook
-//                            if let lastCheckedOutBy = self.selectedBook.lastCheckedOutBy, let lastCheckedOut = self.selectedBook.lastCheckedOut {
-//                                DispatchQueue.main.async {
-//                                    self.checkedOutLabel.text = "Last Checked Out By: \(lastCheckedOutBy) @ \(Book.dateStringToReadableString(lastCheckedOut))"
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        let today = Book.todaysDate()
+        let borrower = "Karen"
+        
+        let requestBody: [ String : Any ] = [
+            "lastCheckedOut": today,
+            "lastCheckedOutBy": borrower
+        ]
+        
+     APIRequestManager.manager.updateData(data: requestBody, method: .put, id: selectedBook.id)
+    
     }
     
     func configureConstraints() {

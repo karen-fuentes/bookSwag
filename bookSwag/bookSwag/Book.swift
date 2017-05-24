@@ -9,7 +9,7 @@
 import Foundation
 
 enum ErrorCases: Error {
-    case parsingError, JsonObjectError
+    case parsingError, JsonObjectError, singlebookError
 }
 
 struct Book {
@@ -65,6 +65,48 @@ struct Book {
             
         }
         return bookArr
+    }
+    static func todaysDate() -> String {
+        let today = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss zzz"
+        return dateFormatter.string(from: today)
+    }
+    static func getSingleBook(from data: Data) -> Book? {
+        var bookToReturn: Book?
+        
+        do {
+            let jsonData: Any = try JSONSerialization.jsonObject(with: data, options: [])
+            
+            guard let response = jsonData as? [String : Any] else {
+                throw ErrorCases.singlebookError
+            }
+            
+//            if let book = try Book(frresponseom: ) {
+//                bookToReturn = book
+//            }
+        }
+            
+        catch {
+            print("Error encountered with \(error)")
+        }
+        
+        return bookToReturn
+    }
+    static func dateStringToReadableString(_ dateString: String) -> String {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss zzz"
+        let date = dateFormatter.date(from: dateString + " GMT")
+        
+        let newFormatter = DateFormatter()
+        newFormatter.dateFormat = "MMM d, yyyy   h:mma"
+        
+        if let date = date {
+            return newFormatter.string(from: date)
+        } else {
+            return "Date Error"
+        }
     }
 }
 
