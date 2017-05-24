@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		9C1E51C61ED532C700B63AA3 /* BookTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1E51C51ED532C700B63AA3 /* BookTableViewCell.swift */; };
+		9C1E51C81ED623EB00B63AA3 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1E51C71ED623EB00B63AA3 /* NetworkManager.swift */; };
 		9CF157471ED109810092BAD3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF157461ED109810092BAD3 /* AppDelegate.swift */; };
 		9CF1574E1ED109810092BAD3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CF1574D1ED109810092BAD3 /* Assets.xcassets */; };
 		9CF157511ED109810092BAD3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CF1574F1ED109810092BAD3 /* LaunchScreen.storyboard */; };
-		9CF157591ED10A670092BAD3 /* APIRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF157581ED10A670092BAD3 /* APIRequestManager.swift */; };
 		9CF1575B1ED10D550092BAD3 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF1575A1ED10D550092BAD3 /* Book.swift */; };
 		9CF1575D1ED1144F0092BAD3 /* BookTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF1575C1ED1144F0092BAD3 /* BookTableViewController.swift */; };
 		9CF1575F1ED126360092BAD3 /* AddBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CF1575E1ED126360092BAD3 /* AddBookViewController.swift */; };
@@ -20,12 +20,12 @@
 
 /* Begin PBXFileReference section */
 		9C1E51C51ED532C700B63AA3 /* BookTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookTableViewCell.swift; sourceTree = "<group>"; };
+		9C1E51C71ED623EB00B63AA3 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		9CF157431ED109810092BAD3 /* bookSwag.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bookSwag.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CF157461ED109810092BAD3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9CF1574D1ED109810092BAD3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9CF157501ED109810092BAD3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9CF157521ED109810092BAD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9CF157581ED10A670092BAD3 /* APIRequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIRequestManager.swift; sourceTree = "<group>"; };
 		9CF1575A1ED10D550092BAD3 /* Book.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		9CF1575C1ED1144F0092BAD3 /* BookTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookTableViewController.swift; sourceTree = "<group>"; };
 		9CF1575E1ED126360092BAD3 /* AddBookViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddBookViewController.swift; sourceTree = "<group>"; };
@@ -92,7 +92,7 @@
 		9CF157641ED20AFA0092BAD3 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				9CF157581ED10A670092BAD3 /* APIRequestManager.swift */,
+				9C1E51C71ED623EB00B63AA3 /* NetworkManager.swift */,
 			);
 			name = Networking;
 			sourceTree = "<group>";
@@ -181,9 +181,9 @@
 			files = (
 				9CF1575B1ED10D550092BAD3 /* Book.swift in Sources */,
 				9CF1575F1ED126360092BAD3 /* AddBookViewController.swift in Sources */,
+				9C1E51C81ED623EB00B63AA3 /* NetworkManager.swift in Sources */,
 				9CF157611ED20A850092BAD3 /* BookDetailViewController.swift in Sources */,
 				9C1E51C61ED532C700B63AA3 /* BookTableViewCell.swift in Sources */,
-				9CF157591ED10A670092BAD3 /* APIRequestManager.swift in Sources */,
 				9CF1575D1ED1144F0092BAD3 /* BookTableViewController.swift in Sources */,
 				9CF157471ED109810092BAD3 /* AppDelegate.swift in Sources */,
 			);

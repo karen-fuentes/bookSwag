@@ -12,10 +12,9 @@ import Social
 class BookDetailViewController: UIViewController {
     var selectedBook: Book!
     let stackView = UIStackView()
-    let basePoint = "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177"
-    let bookEndpoint = "/books/"
+    var endPoint = ""
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -33,45 +32,64 @@ class BookDetailViewController: UIViewController {
         deleteButton.addTarget(self, action: #selector(deleteButtonWasPressed), for: .touchUpInside)
     }
     
+    
+    // MARK: - Button Methods
+    
     func shareButtonWasPressed() {
         if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeFacebook) {
             let socialController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-            socialController?.setInitialText("Check out this book: \(selectedBook.title)")
+            socialController?.setInitialText("Check out this book: \(selectedBook.title!)")
             socialController?.add(URL(string: "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177" + selectedBook.url))
-            
             self.present(socialController!, animated: true, completion: nil)
         } else {
             let alert = UIAlertController(title: "Accounts", message: "Please login to a Facebook account to share.", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
-        
     }
     
-    func deleteButtonWasPressed(){
-        print("delete button was pressed")
-      APIRequestManager.manager.deleteRequest(endPoint: basePoint + bookEndpoint, id: selectedBook.id) { (response) in
+    func deleteButtonWasPressed()  {
         let alert = UIAlertController(title: "Delete", message: "Are you sure you want to delete this book?", preferredStyle: UIAlertControllerStyle.alert)
-               alert.addAction(UIAlertAction(title: "Delete", style: UIAlertActionStyle.destructive, handler: { (alert) in
-            let nav = UINavigationController(rootViewController: BookTableViewController())
-            self.present(nav, animated: true, completion: nil)
-        }))
-            self.present(alert, animated: true, completion: nil)
-        }
         
+        alert.addAction(UIAlertAction(title: "Delete", style: UIAlertActionStyle.destructive, handler: { (alert) in
+            
+            NetworkRequestManager.manager.makeRequest(to: self.endPoint, method: .delete, body: nil, id: self.selectedBook.id) { (data) in
+                let successfulDeleteAlert = UIAlertController(title: "Succesful!", message: "You Succesfully Deleted This Book", preferredStyle: UIAlertControllerStyle.alert)
+                
+                successfulDeleteAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (alert) in
+                    self.dismiss(animated: true, completion: nil)
+                    
+                    let nav = UINavigationController(rootViewController: BookTableViewController())
+                    self.present(nav, animated: true, completion: nil)
+                }))
+                self.present(successfulDeleteAlert, animated: true, completion: nil)
+            }
+            
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: { (alert) in
+            self.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
-   func checkoutButtonWasPressed () {
+    
+    func checkoutButtonWasPressed() {
         let today = Book.todaysDate()
         let borrower = "Karen"
-        
         let requestBody: [ String : Any ] = [
             "lastCheckedOut": today,
             "lastCheckedOutBy": borrower
         ]
         
-     APIRequestManager.manager.updateData(data: requestBody, method: .put, id: selectedBook.id)
-    
+        
+        NetworkRequestManager.manager.makeRequest(to: endPoint, method: .put, body: requestBody, id: selectedBook.id) { (data) in
+            //
+        }
+        
+        
     }
+    
+    // MARK: - Set up views and constraints
     
     func configureConstraints() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -107,15 +125,15 @@ class BookDetailViewController: UIViewController {
         self.view.addSubview(stackView)
         self.view.addSubview(checkoutButton)
         self.view.addSubview(deleteButton)
-
+        
     }
     
     //MARK: - UI Objects
     
     lazy var titleLabel: UILabel = {
-       let lbl = UILabel()
-       lbl.textColor = .blue
-       return lbl
+        let lbl = UILabel()
+        lbl.textColor = .blue
+        return lbl
     }()
     lazy var authorLabel: UILabel = {
         let lbl = UILabel()
@@ -160,5 +178,5 @@ class BookDetailViewController: UIViewController {
         button.layer.cornerRadius = 5
         button.clipsToBounds = true
         return button
-        }()
+    }()
 }

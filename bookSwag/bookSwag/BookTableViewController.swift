@@ -10,6 +10,9 @@ import UIKit
 
 class BookTableViewController: UITableViewController {
     var arrOfBooks = [Book]()
+    let endPoint = "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177/"
+    let getEndPoint = "books"
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +31,9 @@ class BookTableViewController: UITableViewController {
     
     //MARK: - Networking
     
-    func getData() {
-        let booksEndpoint = "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177/books"
-        APIRequestManager.manager.getData(endPoint: booksEndpoint) { (data) in
-            if let validData = data {
+    func getData(){
+        NetworkRequestManager.manager.makeRequest(to: endPoint + getEndPoint, method: .get, body: nil) { (data) in
+            if  let validData = data {
                 self.arrOfBooks = Book.createBookObjects(data: validData)!
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -39,13 +41,15 @@ class BookTableViewController: UITableViewController {
             }
         }
     }
-   
-    
+
     // MARK: - addBook Functionality
     
     func addBookButtonWasPressed() {
-        let navController = UINavigationController(rootViewController: AddBookViewController())
+        let destination = AddBookViewController()
+        let navController = UINavigationController(rootViewController: destination)
+        destination.endPoint = self.endPoint + getEndPoint
         self.present(navController, animated: true, completion: nil)
+        
     }
 
     // MARK: - Table view data source
@@ -67,6 +71,7 @@ class BookTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = BookDetailViewController()
         detailVC.selectedBook = arrOfBooks[indexPath.row]
+        detailVC.endPoint = self.endPoint + self.getEndPoint
         self.navigationController?.pushViewController(detailVC, animated: true)
     }
 }

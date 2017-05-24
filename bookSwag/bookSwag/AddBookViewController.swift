@@ -10,6 +10,7 @@ import UIKit
 
 class AddBookViewController: UIViewController {
     let stackView = UIStackView()
+    var endPoint = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +21,6 @@ class AddBookViewController: UIViewController {
         submitButton.addTarget(self, action: #selector(submitButtonWasPressed), for: .touchUpInside)
         viewHiearchy()
         configureConstraint()
-        
     }
     
     func doneButtonWasPressed() {
@@ -31,13 +31,15 @@ class AddBookViewController: UIViewController {
             let publisher = publisherTextField.text,
             let author = authorTextField.text,
             let categories = categoriesTextField.text {
-            let postData = [
+            let postData:[String:Any] = [
                 "title": "\(title)",
                 "author": "\(author)",
                 "publisher": "\(publisher)",
                 "categories": "\(categories)"
             ]
-            APIRequestManager.manager.updateData(data: postData, method: .post, id: nil)
+            NetworkRequestManager.manager.makeRequest(to: endPoint, method: .post, body: postData, completion: { (data) in
+                
+            })
         }
        
     }
