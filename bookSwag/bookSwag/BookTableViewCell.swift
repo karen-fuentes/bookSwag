@@ -15,7 +15,7 @@ class BookTableViewCell: UITableViewCell {
         self.contentView.addSubview(bookTitleLabel)
         self.contentView.addSubview(bookAuthorLabel)
         configureConstraints()
-
+       
     }
     
     required init?(coder aDecoder: NSCoder) {

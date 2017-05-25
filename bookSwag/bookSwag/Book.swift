@@ -22,26 +22,27 @@ struct Book {
     var title: String?
     let url: String
     
-
-   static func createBookObjects(data: Data) -> [Book]? {
+    // MARK: - Parsing
+    
+    static func createBookObjects(data: Data) -> [Book]? {
         var bookArr = [Book]()
         let defaultValue: String?  = " "
         
         do {
-         let jsonData = try JSONSerialization.jsonObject(with: data , options: [])
+            let jsonData = try JSONSerialization.jsonObject(with: data , options: [])
             guard let JsonArr = jsonData as? [[String:AnyObject]] else {
-               throw ErrorCases.JsonObjectError
+                throw ErrorCases.JsonObjectError
             }
             
             for bookDict in JsonArr {
                 guard let author = bookDict["author"] as? String ?? defaultValue,
-                      let categories = bookDict["categories"] as? String ?? defaultValue,
-                      let id = bookDict["id"] as? Int,
-                      let lastCheckedOut = bookDict["lastCheckedOut"] as? String ?? defaultValue,
-                      let lastCheckedOutBy = bookDict["lastCheckedOutBy"] as? String ?? defaultValue,
-                      let title = bookDict["title"] as? String ?? defaultValue,
-                      let publisher = bookDict["publisher"] as? String ?? defaultValue,
-                      let url = bookDict["url"] as? String else {
+                    let categories = bookDict["categories"] as? String ?? defaultValue,
+                    let id = bookDict["id"] as? Int,
+                    let lastCheckedOut = bookDict["lastCheckedOut"] as? String ?? defaultValue,
+                    let lastCheckedOutBy = bookDict["lastCheckedOutBy"] as? String ?? defaultValue,
+                    let title = bookDict["title"] as? String ?? defaultValue,
+                    let publisher = bookDict["publisher"] as? String ?? defaultValue,
+                    let url = bookDict["url"] as? String else {
                         throw ErrorCases.parsingError
                 }
                 
@@ -51,13 +52,36 @@ struct Book {
                 
             }
         }
-        
+            
         catch {
             
         }
         return bookArr
     }
-
+    
+    // MARK: - Get One Book Method
+    
+    static func getOneBook(from data: Data) -> Book? {
+        var bookToReturn: Book?
+    do {
+            let jsonData: Any = try JSONSerialization.jsonObject(with: data, options: [])
+            
+            guard let response = jsonData as? [String : Any] else {
+                throw ErrorCases.parsingError
+        }
+            
+            if let book = try Book(dict: response) {
+                bookToReturn = book
+            }
+        }
+        catch {
+            print("Error encountered with \(error)")
+        }
+        return bookToReturn
+    }
+    
+   // MARK: - Date Functions
+    
     static func todaysDate() -> String {
         let today = Date()
         let dateFormatter = DateFormatter()
@@ -83,7 +107,7 @@ struct Book {
     }
 }
 
-/*
+/* What data looks like ⬇️
  
  "author": "Jason Morris",
  "categories": "interface, ui, android",

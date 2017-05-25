@@ -26,6 +26,7 @@ class BookTableViewController: UITableViewController {
         self.navigationItem.rightBarButtonItem?.tintColor = .red
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 200
+        self.tableView.backgroundColor = .bookSwagPurple
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -87,6 +88,8 @@ class BookTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "bookCell", for: indexPath) as! BookTableViewCell
         cell.bookTitleLabel.text = arrOfBooks[indexPath.row].title
         cell.bookAuthorLabel.text = arrOfBooks[indexPath.row].author
+        let cellColor: UIColor = ((indexPath.row % 2) == 0) ? .bookSwagGray : .bookSwagBlue
+        cell.backgroundColor = cellColor
         return cell
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

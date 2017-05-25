@@ -9,17 +9,19 @@
 import UIKit
 
 class AddBookViewController: UIViewController {
+    
+    //MARK: - Properties
+    
     let stackView = UIStackView()
-    var endPoint = ""
+    var endPoint = String() 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red:0.54, green:0.77, blue:0.96, alpha:1.0)
+        view.backgroundColor = .bookSwagGreen
         self.title = "Add Book"
         self.navigationItem.setHidesBackButton(true , animated: true)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(doneButtonWasPressed))
         submitButton.addTarget(self, action: #selector(submitButtonWasPressed), for: .touchUpInside)
-        self.navigationController?.navigationBar.tintColor = .clear 
         viewHiearchy()
         configureConstraint()
     }
@@ -27,34 +29,43 @@ class AddBookViewController: UIViewController {
     func doneButtonWasPressed() {
         self.dismiss(animated: true , completion: nil)
     }
+    
+    //MARK: - Submit Book Method (post request and alerts)
+    
     func submitButtonWasPressed(){
-        if let title = titleTextField.text,
-            let publisher = publisherTextField.text,
-            let author = authorTextField.text,
-            let categories = categoriesTextField.text {
-            let postData:[String:Any] = [
-                "title": "\(title)",
-                "author": "\(author)",
-                "publisher": "\(publisher)",
-                "categories": "\(categories)"
-            ]
-            NetworkRequestManager.manager.makeRequest(to: endPoint, method: .post, body: postData, completion: { (data) in
-                DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Successful 🎉", message: "You have successfuly saved this book", preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (alert) in
-                        self.dismiss(animated: true, completion: nil)
-                    }))
-                    self.present(alert, animated: true, completion: nil)
-                }
-            })
+        if titleTextField.text == "" || publisherTextField.text == "" || authorTextField.text == "" || categoriesTextField.text == "" {
+            let alert = UIAlertController(title: "Missing Info", message: "You must fill all the fields to submit a book to the library", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (alert) in
+                self.dismiss(animated: true, completion: nil)
+            }))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            if let title = titleTextField.text,
+                let publisher = publisherTextField.text,
+                let author = authorTextField.text,
+                let categories = categoriesTextField.text {
+                let postData:[String:Any] = [
+                    "title": "\(title)",
+                    "author": "\(author)",
+                    "publisher": "\(publisher)",
+                    "categories": "\(categories)"
+                ]
+                NetworkRequestManager.manager.makeRequest(to: endPoint, method: .post, body: postData, completion: { (data) in
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController(title: "Successful 🎉", message: "You have successfuly saved this book", preferredStyle: UIAlertControllerStyle.alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (alert) in
+                            self.dismiss(animated: true, completion: nil)
+                        }))
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                })
+            }
         }
-       
     }
     
     //MARK: - Constraint Config.
     
     func configureConstraint() {
-        self.edgesForExtendedLayout = []
         stackView.translatesAutoresizingMaskIntoConstraints = false
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
         authorTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -64,7 +75,7 @@ class AddBookViewController: UIViewController {
         
         let _ = [
             stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 40.0),
+            stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100.0),
             
             titleTextField.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 8),
             titleTextField.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8),
@@ -108,33 +119,33 @@ class AddBookViewController: UIViewController {
     lazy var titleTextField: UITextField = {
         let txtField = UITextField()
         txtField.placeholder = "Title"
-        txtField.backgroundColor = .white
+        txtField.backgroundColor = .bookSwagGray
         txtField.textAlignment = .center
-        txtField.borderStyle = .line
+        txtField.borderStyle = .roundedRect
         return txtField
     }()
     lazy var authorTextField: UITextField = {
         let txtField = UITextField()
         txtField.placeholder = "Author"
-        txtField.backgroundColor = .white
+        txtField.backgroundColor = .bookSwagGray
         txtField.textAlignment = .center
-        txtField.borderStyle = .line
+        txtField.borderStyle = .roundedRect
         return txtField
     }()
     lazy var publisherTextField: UITextField = {
         let txtField = UITextField()
         txtField.placeholder = "Publisher"
-        txtField.backgroundColor = .white
+        txtField.backgroundColor = .bookSwagGray
         txtField.textAlignment = .center
-        txtField.borderStyle = .line
+        txtField.borderStyle = .roundedRect
         return txtField
     }()
     lazy var categoriesTextField: UITextField = {
         let txtField = UITextField()
         txtField.placeholder = "Categories"
-        txtField.backgroundColor = .white
+        txtField.backgroundColor = .bookSwagGray
         txtField.textAlignment = .center
-        txtField.borderStyle = .line
+        txtField.borderStyle = .roundedRect
         return txtField
     }()
     lazy var submitButton: UIButton = {
@@ -144,9 +155,9 @@ class AddBookViewController: UIViewController {
         button.clipsToBounds = true
         button.backgroundColor = .clear
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor(red:0.29, green:0.47, blue:0.75, alpha:1.0)
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.lightGray.cgColor
+        button.backgroundColor = .bookSwagPurple
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor.white.cgColor
         return button
     }()
 }

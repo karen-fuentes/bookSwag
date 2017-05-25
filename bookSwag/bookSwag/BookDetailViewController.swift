@@ -10,17 +10,17 @@ import UIKit
 import Social
 
 class BookDetailViewController: UIViewController {
+    
+    // Mark: - Properties 
+    
     var selectedBook: Book!
     let stackView = UIStackView()
     var borrower = String()
-    let date = Date()
-    var endPoint = ""
-    var currentDate = String()
-    
-    
+    var endPoint = String()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = .bookSwagPurple
         self.title = "Detail"
         setUpViews()
         configureConstraints()
@@ -53,7 +53,7 @@ class BookDetailViewController: UIViewController {
         lastCheckedOutLabel.text = checkoutLabelText
     }
     
-    // MARK: - Button Methods
+    // MARK: - Share Method
     
     func shareButtonWasPressed() {
         if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeFacebook) {
@@ -68,6 +68,8 @@ class BookDetailViewController: UIViewController {
         }
     }
     
+    // MARK: - Delete Button method (deletes book, alerts user) 
+    
     func deleteButtonWasPressed()  {
         let alert = UIAlertController(title: "Delete", message: "Are you sure you want to delete this book?", preferredStyle: UIAlertControllerStyle.alert)
         
@@ -78,8 +80,8 @@ class BookDetailViewController: UIViewController {
                 
                 successfulDeleteAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (alert) in
                     self.dismiss(animated: true, completion: nil)
-                    let nav = UINavigationController(rootViewController: BookTableViewController())
-                    self.navigationController?.present(nav, animated: true, completion: nil)
+                    
+                  _ = self.navigationController?.popViewController(animated: true)
                     
                 }))
                 self.present(successfulDeleteAlert, animated: true, completion: nil)
@@ -92,6 +94,8 @@ class BookDetailViewController: UIViewController {
         }))
         self.present(alert, animated: true, completion: nil)
     }
+    
+    // MARK: - Checkout Button Method (post, update data, and alert)
     
     func checkoutButtonWasPressed() {
         let alert = UIAlertController(title: "Name", message: "please enter your name", preferredStyle: .alert)
@@ -111,31 +115,18 @@ class BookDetailViewController: UIViewController {
                 NetworkRequestManager.manager.makeRequest(to: self.endPoint, method: .put, body: requestBody, id: self.selectedBook.id) { (_, response) in
                     if let responseHTTP = response as? HTTPURLResponse {
                         if responseHTTP.statusCode == 200 {
-                            print("Works. \(self.borrower) posted")
+                            //print("Works. \(self.borrower) posted")
                             
                             NetworkRequestManager.manager.makeRequest(to: "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177" + self.selectedBook.url) { (data, _) in
                                 
                                 if let validData = data {
-                                    do {
-                                        let jsonData = try JSONSerialization.jsonObject(with: validData , options: [])
-                                        
-                                        guard let updatedBook = jsonData as? [String:AnyObject] else {
-                                            throw ErrorCases.JsonObjectError
-                                        }
-                                        
-                                        guard let lastCheckedOut = updatedBook["lastCheckedOut"] as? String,
-                                            let lastCheckedOutBy = updatedBook["lastCheckedOutBy"] as? String else {
-                                                throw ErrorCases.parsingError
-                                        }
-                                        
-                                        DispatchQueue.main.async {
-                                            self.lastCheckedOutLabel.text = "Last Checked Out By: \(lastCheckedOutBy) @ \(Book.dateStringToReadableString(lastCheckedOut))"
-                                        }
+                                    self.selectedBook = Book.getOneBook(from: validData)
+                                    DispatchQueue.main.async {
+                                        guard let checkoutBy = self.selectedBook.lastCheckedOutBy,
+                                            let date = self.selectedBook.lastCheckedOut else {return}
+                                        self.lastCheckedOutLabel.text = "Last Checked Out By: \(checkoutBy) @ \(Book.dateStringToReadableString(date))"
                                     }
-                                        
-                                    catch {
-                                        print(error)
-                                    }
+                                    
                                 }
                             }
                         }
@@ -146,17 +137,17 @@ class BookDetailViewController: UIViewController {
         
         self.present(alert, animated: true, completion: nil)
     }
+    
     // MARK: - Set up views and constraints
     
     func configureConstraints() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
-        self.edgesForExtendedLayout = []
+       // self.edgesForExtendedLayout = []
         let _ = [
             stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            //stackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -30),
-            stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 20),
+            stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
             stackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 8),
             stackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -8),
             
@@ -249,8 +240,10 @@ class BookDetailViewController: UIViewController {
         button.setTitle("Check Out", for: .normal)
         button.setTitleColor(.blue, for: .normal)
         button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.black.cgColor
         button.layer.cornerRadius = 5
         button.clipsToBounds = true
+        button.backgroundColor = .bookSwagGray
         return button
     }()
     lazy var deleteButton: UIButton = {

@@ -9,7 +9,7 @@
 import Foundation
 extension Book {
     
-    init(dict: [String: AnyObject]) throws {
+    init?(dict: [String: Any]) throws {
         self.init(
             author: dict["author"] as? String,
             categories: dict["categories"] as? String,
