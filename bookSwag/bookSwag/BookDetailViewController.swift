@@ -12,11 +12,10 @@ import Social
 class BookDetailViewController: UIViewController {
     var selectedBook: Book!
     let stackView = UIStackView()
-    let date = Book.todaysDate()
-//    let formatter = DateFormatter()
-//    var currentDate = String()
-    let borrower = "Karen"
+    var borrower = String()
+    let date = Date()
     var endPoint = ""
+    var currentDate = String()
     
     
     override func viewDidLoad() {
@@ -45,16 +44,13 @@ class BookDetailViewController: UIViewController {
         }
         
         if let lastCheckedOut = selectedBook.lastCheckedOut, let lastCheckedOutBy = selectedBook.lastCheckedOutBy {
-            checkoutLabelText += "\(lastCheckedOutBy) @ \(lastCheckedOut)"
+            checkoutLabelText += "\(lastCheckedOutBy) @ \(Book.dateStringToReadableString(lastCheckedOut))"
         } else {
             checkoutLabelText += "None"
         }
         
-        categoriesLabel.text = "Categories: \(selectedBook.catrgoires!)"
+        categoriesLabel.text = "Categories: \(selectedBook.categories!)"
         lastCheckedOutLabel.text = checkoutLabelText
-        
-        dump(selectedBook)
- 
     }
     
     // MARK: - Button Methods
@@ -71,7 +67,7 @@ class BookDetailViewController: UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
     }
-
+    
     func deleteButtonWasPressed()  {
         let alert = UIAlertController(title: "Delete", message: "Are you sure you want to delete this book?", preferredStyle: UIAlertControllerStyle.alert)
         
@@ -82,9 +78,8 @@ class BookDetailViewController: UIViewController {
                 
                 successfulDeleteAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (alert) in
                     self.dismiss(animated: true, completion: nil)
-                    
                     let nav = UINavigationController(rootViewController: BookTableViewController())
-                    self.present(nav, animated: true, completion: nil)
+                    self.navigationController?.present(nav, animated: true, completion: nil)
                     
                 }))
                 self.present(successfulDeleteAlert, animated: true, completion: nil)
@@ -99,30 +94,58 @@ class BookDetailViewController: UIViewController {
     }
     
     func checkoutButtonWasPressed() {
-       // let today = Book.todaysDate()
-        //let borrower = "Karen"
-        let requestBody: [ String : Any ] = [
-            "lastCheckedOutBy": borrower
-        ]
+        let alert = UIAlertController(title: "Name", message: "please enter your name", preferredStyle: .alert)
         
-        
-        NetworkRequestManager.manager.makeRequest(to: endPoint, method: .put, body: requestBody, id: selectedBook.id) { (data) in
-//            self.formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//            self.formatter.dateStyle = .long
-//            self.currentDate = self.formatter.string(from: self.date)
-//            self.lastCheckedOutLabel.text = "\(self.borrower) @ \(self.currentDate)"
-            
-            let cDate = Book.dateStringToReadableString(self.date)
-            self.lastCheckedOutLabel.text = "\(self.borrower) @ \(cDate)"
-            self.loadBookDetail()
-            
-            
-           
-
+        alert.addTextField { (textField) in
+            textField.placeholder = "Name"
         }
         
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
+            let textField = alert?.textFields![0] // Force unwrapping because we know it exists.
+            if let text = textField?.text {
+                self.borrower = text
+                let requestBody: [ String : Any ] = [
+                    "lastCheckedOutBy": self.borrower
+                ]
+                
+                NetworkRequestManager.manager.makeRequest(to: self.endPoint, method: .put, body: requestBody, id: self.selectedBook.id) { (_, response) in
+                    if let responseHTTP = response as? HTTPURLResponse {
+                        if responseHTTP.statusCode == 200 {
+                            print("Works. \(self.borrower) posted")
+                            
+                            NetworkRequestManager.manager.makeRequest(to: "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177" + self.selectedBook.url) { (data, _) in
+                                
+                                if let validData = data {
+                                    do {
+                                        let jsonData = try JSONSerialization.jsonObject(with: validData , options: [])
+                                        
+                                        guard let updatedBook = jsonData as? [String:AnyObject] else {
+                                            throw ErrorCases.JsonObjectError
+                                        }
+                                        
+                                        guard let lastCheckedOut = updatedBook["lastCheckedOut"] as? String,
+                                            let lastCheckedOutBy = updatedBook["lastCheckedOutBy"] as? String else {
+                                                throw ErrorCases.parsingError
+                                        }
+                                        
+                                        DispatchQueue.main.async {
+                                            self.lastCheckedOutLabel.text = "Last Checked Out By: \(lastCheckedOutBy) @ \(Book.dateStringToReadableString(lastCheckedOut))"
+                                        }
+                                    }
+                                        
+                                    catch {
+                                        print(error)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
     }
-    
     // MARK: - Set up views and constraints
     
     func configureConstraints() {

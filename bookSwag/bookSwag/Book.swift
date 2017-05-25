@@ -14,7 +14,7 @@ enum ErrorCases: Error {
 
 struct Book {
     let author: String?
-    let catrgoires: String?
+    let categories: String?
     let id : Int
     let lastCheckedOut: String?
     let lastCheckedOutBy: String?
@@ -22,6 +22,7 @@ struct Book {
     var title: String?
     let url: String
     
+
    static func createBookObjects(data: Data) -> [Book]? {
         var bookArr = [Book]()
         let defaultValue: String?  = " "
@@ -44,16 +45,7 @@ struct Book {
                         throw ErrorCases.parsingError
                 }
                 
-                let dateFormat = DateFormatter()
-                dateFormat.dateFormat = "yyyy-MM-dd"
-                dateFormat.dateStyle = .long
-                var dateString = String()
-                if let date = dateFormat.date(from: lastCheckedOut) {
-                    dateString = dateFormat.string(from: date)
-                }
-                
-                
-                let parsedBook = Book(author:author, catrgoires:categories, id:id, lastCheckedOut:dateString, lastCheckedOutBy:lastCheckedOutBy, publisher: publisher, title:title, url:url)
+                let parsedBook = Book(author:author, categories:categories, id:id, lastCheckedOut:lastCheckedOut, lastCheckedOutBy:lastCheckedOutBy, publisher: publisher, title:title, url:url)
                 
                 bookArr.append(parsedBook)
                 
@@ -65,7 +57,7 @@ struct Book {
         }
         return bookArr
     }
-    
+
     static func todaysDate() -> String {
         let today = Date()
         let dateFormatter = DateFormatter()

@@ -14,7 +14,7 @@ class BookTableViewController: UITableViewController {
     let getEndPoint = "books"
     let cleanEndPoint = "clean"
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         getData()
@@ -35,7 +35,7 @@ class BookTableViewController: UITableViewController {
     //MARK: - Networking
     
     func getData(){
-        NetworkRequestManager.manager.makeRequest(to: endPoint + getEndPoint, method: .get, body: nil) { (data) in
+        NetworkRequestManager.manager.makeRequest(to: endPoint + getEndPoint, method: .get, body: nil) { (data, response) in
             if  let validData = data {
                 self.arrOfBooks = Book.createBookObjects(data: validData)!
                 DispatchQueue.main.async {
@@ -44,8 +44,8 @@ class BookTableViewController: UITableViewController {
             }
         }
     }
-
-    // MARK: - Nav Button target actions
+    
+    // MARK: - Navigation Bar Button target actions
     
     func addBookButtonWasPressed() {
         let destination = AddBookViewController()
@@ -57,7 +57,7 @@ class BookTableViewController: UITableViewController {
     func deleteAllWasTapped() {
         let alert = UIAlertController(title: "Delete All", message: "Are you sure you want to delete all of your books? 🤔", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Delete", style:  UIAlertActionStyle.destructive, handler: { (alert) in
-            NetworkRequestManager.manager.makeRequest(to: self.endPoint + self.cleanEndPoint, method: .delete, body: nil, id: nil) { (data) in
+            NetworkRequestManager.manager.makeRequest(to: self.endPoint + self.cleanEndPoint, method: .delete, body: nil, id: nil) { (data,response) in
                 if let validData = data {
                     self.arrOfBooks = Book.createBookObjects(data: validData)!
                     DispatchQueue.main.async {
@@ -72,9 +72,9 @@ class BookTableViewController: UITableViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1

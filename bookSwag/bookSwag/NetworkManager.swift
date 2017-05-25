@@ -16,7 +16,7 @@ class NetworkRequestManager{
     static let manager = NetworkRequestManager()
     private init() {}
     
-    func makeRequest(to endpoint: String,  method: RequestMethod = .get, body: [String:Any]? = nil, id: Int? = nil, completion: @escaping (Data?)->Void){
+    func makeRequest(to endpoint: String,  method: RequestMethod = .get, body: [String:Any]? = nil, id: Int? = nil, completion: @escaping (Data?, URLResponse?)->Void){
         var urlString = endpoint
         if let bookId = id {
             urlString = endpoint + "/\(bookId)"
@@ -44,7 +44,7 @@ class NetworkRequestManager{
                 let httpResponse = (response! as! HTTPURLResponse)
                 print("Response status code: \(httpResponse.statusCode)")
             }
-            completion(data)
+            completion(data,response)
 
         }.resume()
     }
