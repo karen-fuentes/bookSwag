@@ -29,7 +29,6 @@ struct Book {
         do {
          let jsonData = try JSONSerialization.jsonObject(with: data , options: [])
             guard let JsonArr = jsonData as? [[String:AnyObject]] else {
-             //PUT ERROR CHECK HERE
                throw ErrorCases.JsonObjectError
             }
             
@@ -42,17 +41,17 @@ struct Book {
                       let title = bookDict["title"] as? String ?? defaultValue,
                       let publisher = bookDict["publisher"] as? String ?? defaultValue,
                       let url = bookDict["url"] as? String else {
-                        //PUT ERROR CHECK HERE
                         throw ErrorCases.parsingError
                 }
                 
                 let dateFormat = DateFormatter()
                 dateFormat.dateFormat = "yyyy-MM-dd"
                 dateFormat.dateStyle = .long
-                var dateString = ""
+                var dateString = String()
                 if let date = dateFormat.date(from: lastCheckedOut) {
                     dateString = dateFormat.string(from: date)
                 }
+                
                 
                 let parsedBook = Book(author:author, catrgoires:categories, id:id, lastCheckedOut:dateString, lastCheckedOutBy:lastCheckedOutBy, publisher: publisher, title:title, url:url)
                 
@@ -66,33 +65,15 @@ struct Book {
         }
         return bookArr
     }
+    
     static func todaysDate() -> String {
         let today = Date()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss zzz"
+        
         return dateFormatter.string(from: today)
     }
-    static func getSingleBook(from data: Data) -> Book? {
-        var bookToReturn: Book?
-        
-        do {
-            let jsonData: Any = try JSONSerialization.jsonObject(with: data, options: [])
-            
-            guard let response = jsonData as? [String : Any] else {
-                throw ErrorCases.singlebookError
-            }
-            
-//            if let book = try Book(frresponseom: ) {
-//                bookToReturn = book
-//            }
-        }
-            
-        catch {
-            print("Error encountered with \(error)")
-        }
-        
-        return bookToReturn
-    }
+    
     static func dateStringToReadableString(_ dateString: String) -> String {
         
         let dateFormatter = DateFormatter()

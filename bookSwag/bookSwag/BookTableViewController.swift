@@ -12,6 +12,7 @@ class BookTableViewController: UITableViewController {
     var arrOfBooks = [Book]()
     let endPoint = "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177/"
     let getEndPoint = "books"
+    let cleanEndPoint = "clean"
     
 
     override func viewDidLoad() {
@@ -21,6 +22,8 @@ class BookTableViewController: UITableViewController {
         self.title = "Book"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add
             , target: self, action: #selector(addBookButtonWasPressed))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Delete All", style: .plain, target: self, action: #selector(deleteAllWasTapped))
+        self.navigationItem.rightBarButtonItem?.tintColor = .red
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 200
     }
@@ -42,15 +45,33 @@ class BookTableViewController: UITableViewController {
         }
     }
 
-    // MARK: - addBook Functionality
+    // MARK: - Nav Button target actions
     
     func addBookButtonWasPressed() {
         let destination = AddBookViewController()
         let navController = UINavigationController(rootViewController: destination)
         destination.endPoint = self.endPoint + getEndPoint
         self.present(navController, animated: true, completion: nil)
-        
     }
+    
+    func deleteAllWasTapped() {
+        let alert = UIAlertController(title: "Delete All", message: "Are you sure you want to delete all of your books? 🤔", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Delete", style:  UIAlertActionStyle.destructive, handler: { (alert) in
+            NetworkRequestManager.manager.makeRequest(to: self.endPoint + self.cleanEndPoint, method: .delete, body: nil, id: nil) { (data) in
+                if let validData = data {
+                    self.arrOfBooks = Book.createBookObjects(data: validData)!
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: { (alert) in
+            self.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
 
     // MARK: - Table view data source
 

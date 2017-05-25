@@ -38,7 +38,7 @@ class AddBookViewController: UIViewController {
                 "categories": "\(categories)"
             ]
             NetworkRequestManager.manager.makeRequest(to: endPoint, method: .post, body: postData, completion: { (data) in
-                
+                self.navigationController?.dismiss(animated: true, completion: nil)
             })
         }
        
