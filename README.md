@@ -19,7 +19,7 @@ When creating my Network Request Manager I decided to go with a singleton. We wo
 
 Why? :confused:
 
-If we have global access that means that any module within our project that uses this object's method doesn't need to create an instance of it to access those methods. The singleton design pattern allows for only on instance of that object. Hey memory ain't cheap :Dollar Sign Eyes: Being that this is a simple app I thought that is was good to use a singleton pattern, but as we know singleton are not ideal for larger apps because the way objects communicate with each other can become fuzzy and harder to test. 
+If we have global access that means that any module within our project that uses this object's method doesn't need to create an instance of it to access those methods. The singleton design pattern allows for only on instance of that object. Hey memory ain't cheap :money: Being that this is a simple app I thought that is was good to use a singleton pattern, but as we know singleton are not ideal for larger apps because the way objects communicate with each other can become fuzzy and harder to test. 
 ##### DRY
 
 Dont Repeat Yourself. Three words us coders live by... well at least try to. In the first couple of iterations of this project I had varying methods for this class one for each method :worried:. I like to make sure indiviual parts work prior to making a dynamic function like the one below. Seeing that the code seemed redundant for each different http method with its own function. I refactored and refactored until I made a working function that takes in various types of Http methods, and depending on that it makes the request to the server. 
@@ -82,6 +82,9 @@ The function optionally takes in a body which is of type [String:Any] this is id
 
 Then there is the completion handler this allows for the data to load asynchronous. Now what does that mean? Well think about it like this. Let's say you wanted to make chicken noodle soup. There are various tasks you must complete in order to get this done. Similar to your network request. Some things may take longer to complete like getting the chicken ready for your soup. Networking is similar in that it's a long process, and it has various factors that can make it even slower. There might be something wrong with the server, your computer maybe slow, or the wifi may be faulty. To be effecient one must do other tasks like chop up veggies while the chicken cooks. The data is loading in the background thread while you do other things on the main thread. That way your app is still running on the main thread while data loads in the back. 
 
+##### Results 
+
+ONE BEAUTIFUL DYNAMIC FUNCTION :love:
 
 ## Demos: checkout book, add book, delete book/ all books, and share books
 #### Checkout book 
