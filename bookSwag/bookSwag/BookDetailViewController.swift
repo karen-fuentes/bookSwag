@@ -11,22 +11,26 @@ import Social
 
 class BookDetailViewController: UIViewController {
     
-    // Mark: - Properties 
+    // Mark: - Properties
     
     var selectedBook: Book!
     let stackView = UIStackView()
     var borrower = String()
     var endPoint = String()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.view.backgroundColor = .bookSwagPurple
         self.title = "Detail"
+        
         setUpViews()
         configureConstraints()
         loadBookDetail()
+        
         self.titleLabel.text = selectedBook.title
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "ShareIcon"), style: .plain, target: self, action: #selector (shareButtonWasPressed))
+        
         checkoutButton.addTarget(self, action: #selector(checkoutButtonWasPressed), for: .touchUpInside)
         deleteButton.addTarget(self, action: #selector(deleteButtonWasPressed), for: .touchUpInside)
     }
@@ -35,15 +39,18 @@ class BookDetailViewController: UIViewController {
     
     func loadBookDetail() {
         var checkoutLabelText = "Last Checked Out By: "
+        
         titleLabel.text = selectedBook.title
         authorLabel.text = selectedBook.author
+        
         if let publisher = selectedBook.publisher {
             publisherLabel.text = "Publishers: \(publisher)"
         } else {
             publisherLabel.text = "Publishers: None"
         }
         
-        if let lastCheckedOut = selectedBook.lastCheckedOut, let lastCheckedOutBy = selectedBook.lastCheckedOutBy {
+        if let lastCheckedOut = selectedBook.lastCheckedOut,
+            let lastCheckedOutBy = selectedBook.lastCheckedOutBy {
             checkoutLabelText += "\(lastCheckedOutBy) @ \(Book.dateStringToReadableString(lastCheckedOut))"
         } else {
             checkoutLabelText += "None"
@@ -58,40 +65,44 @@ class BookDetailViewController: UIViewController {
     func shareButtonWasPressed() {
         if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeFacebook) {
             let socialController = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+            
             socialController?.setInitialText("Check out this book: \(selectedBook.title!)")
-            socialController?.add(URL(string: "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177" + selectedBook.url))
+            socialController?.add(URL(string: endPoint + selectedBook.url))
+            
             self.present(socialController!, animated: true, completion: nil)
         } else {
             let alert = UIAlertController(title: "Accounts", message: "Please login to a Facebook account to share.", preferredStyle: UIAlertControllerStyle.alert)
+            
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            
             self.present(alert, animated: true, completion: nil)
         }
     }
     
-    // MARK: - Delete Button method (deletes book, alerts user) 
+    // MARK: - Delete Button method (deletes book, alerts user)
     
     func deleteButtonWasPressed()  {
         let alert = UIAlertController(title: "Delete", message: "Are you sure you want to delete this book?", preferredStyle: UIAlertControllerStyle.alert)
         
         alert.addAction(UIAlertAction(title: "Delete", style: UIAlertActionStyle.destructive, handler: { (alert) in
             
-            NetworkRequestManager.manager.makeRequest(to: self.endPoint, method: .delete, body: nil, id: self.selectedBook.id) { (data) in
+            NetworkRequestManager.manager.makeRequest(to: self.endPoint + self.selectedBook.url, method: .delete, body: nil) { (data, _) in
                 let successfulDeleteAlert = UIAlertController(title: "Succesful!", message: "You Succesfully Deleted This Book", preferredStyle: UIAlertControllerStyle.alert)
                 
                 successfulDeleteAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (alert) in
                     self.dismiss(animated: true, completion: nil)
                     
-                  _ = self.navigationController?.popViewController(animated: true)
-                    
+                    _ = self.navigationController?.popViewController(animated: true)
                 }))
+                
                 self.present(successfulDeleteAlert, animated: true, completion: nil)
             }
-            
         }))
         
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.default, handler: { (alert) in
             self.dismiss(animated: true, completion: nil)
         }))
+        
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -106,27 +117,27 @@ class BookDetailViewController: UIViewController {
         
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
             let textField = alert?.textFields![0] // Force unwrapping because we know it exists.
+            
             if let text = textField?.text {
                 self.borrower = text
+                
                 let requestBody: [ String : Any ] = [
                     "lastCheckedOutBy": self.borrower
                 ]
                 
-                NetworkRequestManager.manager.makeRequest(to: self.endPoint, method: .put, body: requestBody, id: self.selectedBook.id) { (_, response) in
+                NetworkRequestManager.manager.makeRequest(to: self.endPoint + self.selectedBook.url, method: .put, body: requestBody) { (_, response) in
                     if let responseHTTP = response as? HTTPURLResponse {
                         if responseHTTP.statusCode == 200 {
-                            //print("Works. \(self.borrower) posted")
-                            
-                            NetworkRequestManager.manager.makeRequest(to: "http://prolific-interview.herokuapp.com/591f301514bbf7000a22d177" + self.selectedBook.url) { (data, _) in
-                                
+                            NetworkRequestManager.manager.makeRequest(to: self.endPoint + self.selectedBook.url) { (data, _) in
                                 if let validData = data {
                                     self.selectedBook = Book.getOneBook(from: validData)
+                                    
                                     DispatchQueue.main.async {
                                         guard let checkoutBy = self.selectedBook.lastCheckedOutBy,
                                             let date = self.selectedBook.lastCheckedOut else {return}
+                                        
                                         self.lastCheckedOutLabel.text = "Last Checked Out By: \(checkoutBy) @ \(Book.dateStringToReadableString(date))"
                                     }
-                                    
                                 }
                             }
                         }
@@ -144,7 +155,8 @@ class BookDetailViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         checkoutButton.translatesAutoresizingMaskIntoConstraints = false
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
-       // self.edgesForExtendedLayout = []
+        // self.edgesForExtendedLayout = []
+        
         let _ = [
             stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             stackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
@@ -191,6 +203,7 @@ class BookDetailViewController: UIViewController {
         lbl.textAlignment = .left
         return lbl
     }()
+    
     lazy var authorLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
@@ -200,6 +213,7 @@ class BookDetailViewController: UIViewController {
         lbl.textAlignment = .left
         return lbl
     }()
+    
     lazy var publisherLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
@@ -208,6 +222,7 @@ class BookDetailViewController: UIViewController {
         lbl.textAlignment = .left
         return lbl
     }()
+    
     lazy var categoriesLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
@@ -217,6 +232,7 @@ class BookDetailViewController: UIViewController {
         lbl.textAlignment = .left
         return lbl
     }()
+    
     lazy var lastCheckedOutLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
@@ -226,6 +242,7 @@ class BookDetailViewController: UIViewController {
         lbl.textAlignment = .left
         return lbl
     }()
+    
     lazy var lastCheckedOutByLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
@@ -235,6 +252,7 @@ class BookDetailViewController: UIViewController {
         lbl.textAlignment = .left
         return lbl
     }()
+    
     lazy var checkoutButton: UIButton = {
         let button = UIButton()
         button.setTitle("Check Out", for: .normal)
@@ -246,6 +264,7 @@ class BookDetailViewController: UIViewController {
         button.backgroundColor = .bookSwagGray
         return button
     }()
+    
     lazy var deleteButton: UIButton = {
         let button = UIButton()
         button.setTitle("Delete Book", for: .normal)

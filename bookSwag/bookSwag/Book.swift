@@ -38,24 +38,25 @@ struct Book {
                 guard let author = bookDict["author"] as? String ?? defaultValue,
                     let categories = bookDict["categories"] as? String ?? defaultValue,
                     let id = bookDict["id"] as? Int,
-                    let lastCheckedOut = bookDict["lastCheckedOut"] as? String ?? defaultValue,
-                    let lastCheckedOutBy = bookDict["lastCheckedOutBy"] as? String ?? defaultValue,
                     let title = bookDict["title"] as? String ?? defaultValue,
                     let publisher = bookDict["publisher"] as? String ?? defaultValue,
                     let url = bookDict["url"] as? String else {
                         throw ErrorCases.parsingError
                 }
                 
+                let lastCheckedOut = bookDict["lastCheckedOut"] as? String
+                let lastCheckedOutBy = bookDict["lastCheckedOutBy"] as? String
+                
                 let parsedBook = Book(author:author, categories:categories, id:id, lastCheckedOut:lastCheckedOut, lastCheckedOutBy:lastCheckedOutBy, publisher: publisher, title:title, url:url)
                 
                 bookArr.append(parsedBook)
-                
             }
         }
             
         catch {
-            
+            print("Error encountered with \(error)")
         }
+        
         return bookArr
     }
     
@@ -63,24 +64,27 @@ struct Book {
     
     static func getOneBook(from data: Data) -> Book? {
         var bookToReturn: Book?
-    do {
+        
+        do {
             let jsonData: Any = try JSONSerialization.jsonObject(with: data, options: [])
             
             guard let response = jsonData as? [String : Any] else {
                 throw ErrorCases.parsingError
-        }
+            }
             
             if let book = try Book(dict: response) {
                 bookToReturn = book
             }
         }
+            
         catch {
             print("Error encountered with \(error)")
         }
+        
         return bookToReturn
     }
     
-   // MARK: - Date Functions
+    // MARK: - Date Functions
     
     static func todaysDate() -> String {
         let today = Date()
@@ -118,3 +122,4 @@ struct Book {
  "url": "/books/1/"
  
  */
+
