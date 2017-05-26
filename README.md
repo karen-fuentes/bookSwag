@@ -16,8 +16,10 @@ The NetworkRequestManager is the object in charge of making request to the serve
 ##### Singleton 
 
 When creating my Network Request Manager I decided to go with a singleton. We would want a global access to the different methods the NetworkRequestManager has. 
-Why? :thinker:
-If we have global access that means that any module within our project that uses this object's method doesn't need to create an instance of it to access those methods. The singleton design pattern allows for only on instance of that object. Hey memory ain't cheap :Money-Mouth Face: Being that this is a simple app I thought that is was good to use a singleton pattern, but as we know singleton are not ideal for larger apps because the way objects communicate with each other can become fuzzy and harder to test. 
+
+Why? :confused:
+
+If we have global access that means that any module within our project that uses this object's method doesn't need to create an instance of it to access those methods. The singleton design pattern allows for only on instance of that object. Hey memory ain't cheap :Dollar Sign Eyes: Being that this is a simple app I thought that is was good to use a singleton pattern, but as we know singleton are not ideal for larger apps because the way objects communicate with each other can become fuzzy and harder to test. 
 ##### DRY
 
 Dont Repeat Yourself. Three words us coders live by... well at least try to. In the first couple of iterations of this project I had varying methods for this class one for each method :worried:. I like to make sure indiviual parts work prior to making a dynamic function like the one below. Seeing that the code seemed redundant for each different http method with its own function. I refactored and refactored until I made a working function that takes in various types of Http methods, and depending on that it makes the request to the server. 
