@@ -1,5 +1,7 @@
 # Book SWAG
 Book SWAG allows the SWAG committee to keep track of books user check out from the Prolific library server. The user has the ability to add, delete, checkout, and share their favorite book to their friends on facebook. 
+
+<img src="https://github.com/karen-fuentes/bookSwag/blob/master/images/icon.png" width="320" />
  
 ### Features
  
