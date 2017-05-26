@@ -56,15 +56,19 @@ Dont Repeat Yourself. Three words us coders live by... well at least try to. In 
 ```
  
 ## Demos: checkout book, add book, delete book/ all books, and share books
-##### Checkout book 
+#### Checkout book 
 <img src="https://github.com/karen-fuentes/bookSwag/blob/master/images/checkoutBook.gif" width="320" />
-##### Add book 
+
+#### Add book 
 <img src="https://github.com/karen-fuentes/bookSwag/blob/master/images/addingBook.gif" width="320" />
-##### delete book / all books 
+
+#### delete book / all books 
 <img src="https://github.com/karen-fuentes/bookSwag/blob/master/images/deleteBook.gif" width="320" />
-##### Share Books
+
+#### Share Books
 <img src="https://github.com/karen-fuentes/bookSwag/blob/master/images/shareBook.gif" width="320" />
-##### Posted on users facebook
+
+#### Posted on users facebook
 <img src="https://github.com/karen-fuentes/bookSwag/blob/master/images/proofOfUpload.png" width="320" />
 
 
